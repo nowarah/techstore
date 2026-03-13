@@ -1,0 +1,20 @@
+{
+    "cSpell.words": [
+        "april",
+        "Datepicker",
+        "dayjs",
+        "inversed"
+    ],
+
+    "prettier.documentSelectors": [
+        "**/*.{js,jsx,ts,tsx,vue,html,css,scss,less,json,md,mdx,graphql,yaml,yml,php}"
+      ],
+      
+    "eslint.workingDirectories": [
+    { "directory": "frontend", "changeProcessCWD": true }
+    ],
+    "eslint.useFlatConfig": true,
+    "eslint.rules.customizations": [
+    { "rule": "@typescript-eslint/no-explicit-any", "severity": "off" }
+]
+}

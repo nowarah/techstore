@@ -1,0 +1,19 @@
+import { NextResponse } from 'next/server';
+
+export async function POST(request: Request) {
+    const body = await request.json();
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        return NextResponse.json({ message: 'Registration failed' }, { status: 400 });
+    }
+
+    return NextResponse.json({ message: 'Registered successfully!' });
+}
