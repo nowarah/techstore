@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { useCart } from '@/store/cartStore';
+import { Product } from '@/types';
 
-export default function ProductCard({ product }: { product: any }) {
+export default function ProductCard({ product }: { product: Product }) {
     const { addItem, loading } = useCart();
 
     return (

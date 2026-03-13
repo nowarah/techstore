@@ -2,21 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getCart, addToCart, removeFromCart } from '@/lib/cartClient';
-
-type CartItem = {
-    id: number;
-    product: any;
-    quantity: number;
-    subtotal: number;
-    subtotalFormatted: string;
-}
-
-type Cart = {
-    id: number;
-    items: CartItem[];
-    total: number;
-    totalFormatted: string;
-}
+import { Cart } from '@/types';
 
 type CartContextType = {
     cart: Cart | null;

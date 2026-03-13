@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
+import { Product } from '@/types';
 
 async function getFeaturedProducts() {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products?limit=4`, { cache: 'no-store' });
@@ -23,7 +24,7 @@ export default async function HomePage() {
             <section className="max-w-6xl mx-auto px-8 py-16">
                 <h2 className="text-2xl font-bold text-gray-900 mb-8">Featured Products</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {products?.map((product: any) => (
+                    {products?.map((product: Product) => (
                         <ProductCard key={product.id} product={product} />
                     ))}
                 </div>

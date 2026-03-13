@@ -2,8 +2,9 @@
 
 import { useCart } from '@/store/cartStore';
 import { useState } from 'react';
+import { Product } from '@/types';
 
-export default function AddToCartButton({ product }: { product: any }) {
+export default function AddToCartButton({ product }: { product: Product }) {
     const { addItem, loading } = useCart();
     const [quantity, setQuantity] = useState(1);
     const [added, setAdded] = useState(false);

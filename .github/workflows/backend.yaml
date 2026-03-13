@@ -84,6 +84,15 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
+      - name: Create .env file
+        run: |
+          echo "APP_ENV=test" > .env
+          echo "APP_SECRET=ci-test-secret" >> .env
+          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/app_test?serverVersion=16&charset=utf8" >> .env
+          echo "JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem" >> .env
+          echo "JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem" >> .env
+          echo "JWT_PASSPHRASE=ci-test-passphrase" >> .env
+
       - name: Install dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 

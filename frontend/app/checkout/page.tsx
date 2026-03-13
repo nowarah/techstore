@@ -3,6 +3,7 @@
 import { useCart } from '@/store/cartStore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function CheckoutPage() {
     const { cart, refreshCart } = useCart();
@@ -31,7 +32,7 @@ export default function CheckoutPage() {
         return (
             <main className="max-w-2xl mx-auto px-8 py-12 text-center">
                 <h1 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h1>
-                <a href="/products" className="text-blue-600 hover:underline">Continue shopping</a>
+                <Link href="/products" className="text-blue-600 hover:underline">Continue shopping</Link>
             </main>
         );
     }

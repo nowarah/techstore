@@ -22,7 +22,7 @@ export default function LoginPage() {
             body: JSON.stringify({ email, password }),
         });
 
-        const data = await res.json();
+        await res.json();
 
         if (!res.ok) {
             setError('Invalid email or password');
@@ -77,7 +77,7 @@ export default function LoginPage() {
                 </form>
 
                 <p className="text-center text-gray-500 text-sm mt-6">
-                    Don't have an account?{' '}
+                    Don&apos;t have an account?{' '}
                     <Link href="/auth/register" className="text-blue-600 hover:underline">Register</Link>
                 </p>
             </div>

@@ -3,7 +3,7 @@
 import { useCart } from '@/store/cartStore';
 
 export default function CartDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
-    const { cart, removeItem, loading } = useCart();
+    const { cart, removeItem } = useCart();
 
     return (
         <>
