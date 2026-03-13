@@ -91,7 +91,10 @@ class Cart
     public function getTotal(): int
     {
         return array_sum(
-            $this->items->map(fn($item) => $item->getProduct()->getPrice() * $item->getQuantity())->toArray()
+            $this->items->map(fn($item) => $item->getProduct()
+                ? $item->getProduct()->getPrice() * $item->getQuantity()
+                : 0
+            )->toArray()
         );
     }
 
@@ -99,12 +102,14 @@ class Cart
     {
         return [
             'id' => $this->id,
-            'items' => array_values($this->items->map(fn($item) => [
-            'id' => $item->getId(),
-            'product' => $item->getProduct()->toArray(),
-            'quantity' => $item->getQuantity(),
-            'subtotal' => $item->getProduct()->getPrice() * $item->getQuantity(),
-            'subtotalFormatted' => NumberFormatter::format($item->getProduct()->getPrice() * $item->getQuantity()),
+            'items' => array_values($this->items->filter(
+                fn($item) => $item->getProduct() !== null
+            )->map(fn($item) => [
+                'id' => $item->getId(),
+                'product' => $item->getProduct()->toArray(),
+                'quantity' => $item->getQuantity(),
+                'subtotal' => $item->getProduct()->getPrice() * $item->getQuantity(),
+                'subtotalFormatted' => NumberFormatter::format($item->getProduct()->getPrice() * $item->getQuantity()),
             ])->toArray()),
             'total' => $this->getTotal(),
             'totalFormatted' => NumberFormatter::format($this->getTotal()),

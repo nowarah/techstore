@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Repository\ProductRepository;
 use App\Service\CartService;
 use App\Trait\ApiResponseTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,26 +14,39 @@ class CartController extends AbstractController
 {
     use ApiResponseTrait;
 
+    public function __construct(
+        private CartService $cartService,
+    ) {}
+
     #[Route('', methods: ['GET'])]
-    public function index(CartService $cartService): JsonResponse
+    public function index(): JsonResponse
     {
-        $cart = $cartService->getOrCreateCart($this->getUser());
+        $cart = $this->cartService->getOrCreateCart($this->getUser());
         return $this->success($cart->toArray());
     }
 
     #[Route('/add', methods: ['POST'])]
-    public function add(Request $request, CartService $cartService, ProductRepository $productRepository): JsonResponse
+    public function add(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true) ?? [];
+        $data = json_decode($request->getContent(), true);
+        if (!is_array($data)) {
+            return $this->error('Invalid JSON payload', 400);
+        }
 
-        $product = $productRepository->find($data['product_id'] ?? 0);
-        if (!$product) {
-            return $this->error('Product not found', 404);
+        $productId = $data['product_id'] ?? null;
+        $quantity = $data['quantity'] ?? 1;
+
+        if (!$productId) {
+            return $this->error('Product ID is required', 400);
+        }
+
+        if (!is_int($quantity) || $quantity < 1) {
+            return $this->error('Quantity must be a positive integer', 400);
         }
 
         try {
-            $cart = $cartService->getOrCreateCart($this->getUser());
-            $cartService->addItem($cart, $product, $data['quantity'] ?? 1);
+            $cart = $this->cartService->getOrCreateCart($this->getUser());
+            $this->cartService->addItemByProductId($cart, $productId, $quantity);
             return $this->success($cart->toArray());
         } catch (\RuntimeException $e) {
             return $this->error($e->getMessage(), 400);
@@ -42,20 +54,22 @@ class CartController extends AbstractController
     }
 
     #[Route('/remove/{itemId}', methods: ['DELETE'])]
-    public function remove(int $itemId, CartService $cartService): JsonResponse
+    public function remove(int $itemId): JsonResponse
     {
-        $cart = $cartService->getOrCreateCart($this->getUser());
-        $cartService->removeItem($cart, $itemId);
+        $cart = $this->cartService->getOrCreateCart($this->getUser());
+        if (!$this->cartService->removeItem($cart, $itemId)) {
+            return $this->error('Cart item not found', 404);
+        }
 
         return $this->success($cart->toArray());
     }
 
     #[Route('/clear', methods: ['DELETE'])]
-    public function clear(CartService $cartService): JsonResponse
+    public function clear(): JsonResponse
     {
-        $cart = $cartService->getOrCreateCart($this->getUser());
-        $cartService->clearCart($cart);
+        $cart = $this->cartService->getOrCreateCart($this->getUser());
+        $this->cartService->clearCart($cart);
 
-        return $this->success(['message' => 'Cart cleared']);
+        return $this->success($cart->toArray());
     }
 }

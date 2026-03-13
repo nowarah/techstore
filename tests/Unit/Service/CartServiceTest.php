@@ -7,6 +7,7 @@ use App\Entity\CartItem;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Repository\CartRepository;
+use App\Repository\ProductRepository;
 use App\Service\CartService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
@@ -20,6 +21,7 @@ class CartServiceTest extends TestCase
 {
     private MockObject&EntityManagerInterface $em;
     private MockObject&CartRepository $cartRepository;
+    private MockObject&ProductRepository $productRepository;
     private RequestStack&\PHPUnit\Framework\MockObject\Stub $requestStack;
     private CartService $service;
 
@@ -27,13 +29,14 @@ class CartServiceTest extends TestCase
     {
         $this->em = $this->createMock(EntityManagerInterface::class);
         $this->cartRepository = $this->createMock(CartRepository::class);
+        $this->productRepository = $this->createMock(ProductRepository::class);
         $this->requestStack = $this->createStub(RequestStack::class);
 
         $session = $this->createStub(SessionInterface::class);
         $session->method('getId')->willReturn('session-123');
         $this->requestStack->method('getSession')->willReturn($session);
 
-        $this->service = new CartService($this->em, $this->cartRepository, $this->requestStack);
+        $this->service = new CartService($this->em, $this->cartRepository, $this->productRepository, $this->requestStack);
     }
 
     public function testGetOrCreateCartExisting(): void
