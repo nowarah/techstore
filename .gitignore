@@ -28,3 +28,7 @@
 .vscode/
 /compose.override.yaml
 /config/packages/lexik_jwt_authentication.yaml
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
